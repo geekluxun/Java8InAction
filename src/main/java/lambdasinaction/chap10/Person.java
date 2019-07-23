@@ -9,4 +9,8 @@ public class Person {
     public Optional<Car> getCar() {
         return car;
     }
+
+    public void setCar(Optional<Car> car) {
+        this.car = car;
+    }
 }

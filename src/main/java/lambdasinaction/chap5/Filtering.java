@@ -1,30 +1,35 @@
 package lambdasinaction.chap5;
-import lambdasinaction.chap4.*;
 
-import java.util.stream.*;
-import java.util.*;
+import lambdasinaction.chap4.Dish;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static java.util.stream.Collectors.toList;
-
 import static lambdasinaction.chap4.Dish.menu;
 
-public class Filtering{
+/**
+ * 通过谓词过滤
+ */
+public class Filtering {
 
-    public static void main(String...args){
-
+    public static void main(String... args) {
         // Filtering with predicate
-        List<Dish> vegetarianMenu =
-            menu.stream()
-                .filter(Dish::isVegetarian)
-                .collect(toList());
+        List<Dish> vegetarianMenu = menu.stream()
+            .filter(Dish::isVegetarian)
+            .collect(toList());
 
         vegetarianMenu.forEach(System.out::println);
 
         // Filtering unique elements
+        /**
+         * distinct 去重
+         */
         List<Integer> numbers = Arrays.asList(1, 2, 1, 3, 3, 2, 4);
         numbers.stream()
-               .filter(i -> i % 2 == 0)
-               .distinct()
-               .forEach(System.out::println);
+            .filter(i -> i % 2 == 0)
+            .distinct()
+            .forEach(System.out::println);
 
         // Truncating a stream
         List<Dish> dishesLimit3 =
@@ -36,6 +41,9 @@ public class Filtering{
         dishesLimit3.forEach(System.out::println);
 
         // Skipping elements
+        /**
+         * 跳过几个
+         */
         List<Dish> dishesSkip2 =
             menu.stream()
                 .filter(d -> d.getCalories() > 300)

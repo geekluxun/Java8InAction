@@ -30,11 +30,11 @@ public class PartitionPrimeNumbers {
         return IntStream.rangeClosed(2, n).boxed().collect(new PrimeNumbersCollector());
     }
 
-    public static boolean isPrime(List<Integer> primes, Integer candidate) {
-        double candidateRoot = Math.sqrt((double) candidate);
-        //return takeWhile(primes, i -> i <= candidateRoot).stream().noneMatch(i -> candidate % i == 0);
-        return primes.stream().takeWhile(i -> i <= candidateRoot).noneMatch(i -> candidate % i == 0);
-    }
+//    public static boolean isPrime(List<Integer> primes, Integer candidate) {
+//        double candidateRoot = Math.sqrt((double) candidate);
+//        //return takeWhile(primes, i -> i <= candidateRoot).stream().noneMatch(i -> candidate % i == 0);
+//        return primes.stream().takeWhile(i -> i <= candidateRoot).noneMatch(i -> candidate % i == 0);
+//    }
 /*
     public static <A> List<A> takeWhile(List<A> list, Predicate<A> p) {
         int i = 0;
@@ -60,11 +60,12 @@ public class PartitionPrimeNumbers {
 
         @Override
         public BiConsumer<Map<Boolean, List<Integer>>, Integer> accumulator() {
-            return (Map<Boolean, List<Integer>> acc, Integer candidate) -> {
-                acc.get( isPrime( acc.get(true),
-                        candidate) )
-                        .add(candidate);
-            };
+            return null;
+//            return (Map<Boolean, List<Integer>> acc, Integer candidate) -> {
+//                acc.get( isPrime( acc.get(true),
+//                        candidate) )
+//                        .add(candidate);
+//            };
         }
 
         @Override
@@ -87,20 +88,20 @@ public class PartitionPrimeNumbers {
         }
     }
 
-    public Map<Boolean, List<Integer>> partitionPrimesWithInlineCollector(int n) {
-        return Stream.iterate(2, i -> i + 1).limit(n)
-                .collect(
-                        () -> new HashMap<Boolean, List<Integer>>() {{
-                            put(true, new ArrayList<Integer>());
-                            put(false, new ArrayList<Integer>());
-                        }},
-                        (acc, candidate) -> {
-                            acc.get( isPrime(acc.get(true), candidate) )
-                                    .add(candidate);
-                        },
-                        (map1, map2) -> {
-                            map1.get(true).addAll(map2.get(true));
-                            map1.get(false).addAll(map2.get(false));
-                        });
-    }
+//    public Map<Boolean, List<Integer>> partitionPrimesWithInlineCollector(int n) {
+//        return Stream.iterate(2, i -> i + 1).limit(n)
+//                .collect(
+//                        () -> new HashMap<Boolean, List<Integer>>() {{
+//                            put(true, new ArrayList<Integer>());
+//                            put(false, new ArrayList<Integer>());
+//                        }},
+//                        (acc, candidate) -> {
+//                            acc.get( isPrime(acc.get(true), candidate) )
+//                                    .add(candidate);
+//                        },
+//                        (map1, map2) -> {
+//                            map1.get(true).addAll(map2.get(true));
+//                            map1.get(false).addAll(map2.get(false));
+//                        });
+//    }
 }
