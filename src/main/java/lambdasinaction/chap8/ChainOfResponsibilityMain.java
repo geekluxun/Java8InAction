@@ -15,9 +15,9 @@ public class ChainOfResponsibilityMain {
 
 
         UnaryOperator<String> headerProcessing =
-                (String text) -> "From Raoul, Mario and Alan: " + text;
+            (String text) -> "From Raoul, Mario and Alan: " + text;
         UnaryOperator<String> spellCheckerProcessing =
-                (String text) -> text.replaceAll("labda", "lambda");
+            (String text) -> text.replaceAll("labda", "lambda");
         Function<String, String> pipeline = headerProcessing.andThen(spellCheckerProcessing);
         String result2 = pipeline.apply("Aren't labdas really sexy?!!");
         System.out.println(result2);
@@ -42,14 +42,14 @@ public class ChainOfResponsibilityMain {
     }
 
     static private class HeaderTextProcessing
-            extends ProcessingObject<String> {
+        extends ProcessingObject<String> {
         public String handleWork(String text) {
             return "From Raoul, Mario and Alan: " + text;
         }
     }
 
     static private class SpellCheckerProcessing
-            extends ProcessingObject<String> {
+        extends ProcessingObject<String> {
         public String handleWork(String text) {
             return text.replaceAll("labda", "lambda");
         }

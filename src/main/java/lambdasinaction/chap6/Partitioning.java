@@ -1,6 +1,8 @@
 package lambdasinaction.chap6;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
@@ -8,26 +10,41 @@ import static lambdasinaction.chap6.Dish.menu;
 
 public class Partitioning {
 
-    public static void main(String ... args) {
+    public static void main(String... args) {
         System.out.println("Dishes partitioned by vegetarian: " + partitionByVegeterian());
         System.out.println("Vegetarian Dishes by type: " + vegetarianDishesByType());
         System.out.println("Most caloric dishes by vegetarian: " + mostCaloricPartitionedByVegetarian());
     }
 
+    /**
+     * 分区是分组的一种特例，使用的分类函数是一个谓词
+     *
+     * @return
+     */
     private static Map<Boolean, List<Dish>> partitionByVegeterian() {
         return menu.stream().collect(partitioningBy(Dish::isVegetarian));
     }
 
+    /**
+     * 多级分组
+     *
+     * @return
+     */
     private static Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType() {
         return menu.stream().collect(partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType)));
     }
 
+    /**
+     * 先按荤素分区再取各自的热量最大的
+     *
+     * @return
+     */
     private static Object mostCaloricPartitionedByVegetarian() {
         return menu.stream().collect(
-                partitioningBy(Dish::isVegetarian,
-                        collectingAndThen(
-                                maxBy(comparingInt(Dish::getCalories)),
-                                Optional::get)));
+            partitioningBy(Dish::isVegetarian,
+                collectingAndThen(
+                    maxBy(comparingInt(Dish::getCalories)),
+                    Optional::get)));
     }
 }
 

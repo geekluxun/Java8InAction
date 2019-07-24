@@ -1,13 +1,14 @@
 package lambdasinaction.chap7;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class WordCount {
 
     public static final String SENTENCE =
-            " Nel   mezzo del cammin  di nostra  vita " +
+        " Nel   mezzo del cammin  di nostra  vita " +
             "mi  ritrovai in una  selva oscura" +
             " che la  dritta via era   smarrita ";
 
@@ -23,6 +24,7 @@ public class WordCount {
             if (Character.isWhitespace(c)) {
                 lastSpace = true;
             } else {
+                // 上一个字符是空格，当前字符，则单词数加1
                 if (lastSpace) counter++;
                 lastSpace = Character.isWhitespace(c);
             }
@@ -30,19 +32,32 @@ public class WordCount {
         return counter;
     }
 
+    /**
+     * 流风格写的单词计数器
+     *
+     * @param s
+     * @return
+     */
     public static int countWords(String s) {
         //Stream<Character> stream = IntStream.range(0, s.length())
         //                                    .mapToObj(SENTENCE::charAt).parallel();
         Spliterator<Character> spliterator = new WordCounterSpliterator(s);
+        // 拆分流
         Stream<Character> stream = StreamSupport.stream(spliterator, true);
 
         return countWords(stream);
     }
 
+    /**
+     * accumulate对每一个元素执行，combine对accumulate规约
+     *
+     * @param stream
+     * @return
+     */
     private static int countWords(Stream<Character> stream) {
         WordCounter wordCounter = stream.reduce(new WordCounter(0, true),
-                                                WordCounter::accumulate,
-                                                WordCounter::combine);
+            WordCounter::accumulate,
+            WordCounter::combine);
         return wordCounter.getCounter();
     }
 
@@ -59,7 +74,7 @@ public class WordCount {
             if (Character.isWhitespace(c)) {
                 return lastSpace ? this : new WordCounter(counter, true);
             } else {
-                return lastSpace ? new WordCounter(counter+1, false) : this;
+                return lastSpace ? new WordCounter(counter + 1, false) : this;
             }
         }
 
@@ -72,6 +87,9 @@ public class WordCount {
         }
     }
 
+    /**
+     * 可分迭代器（用来拆分遍历的数据）
+     */
     private static class WordCounterSpliterator implements Spliterator<Character> {
 
         private final String string;
@@ -87,9 +105,15 @@ public class WordCount {
             return currentChar < string.length();
         }
 
+        /**
+         * 定义了拆分逻辑
+         *
+         * @return
+         */
         @Override
         public Spliterator<Character> trySplit() {
             int currentSize = string.length() - currentChar;
+            // 小于10个字符将不再拆分
             if (currentSize < 10) {
                 return null;
             }
@@ -108,6 +132,11 @@ public class WordCount {
             return string.length() - currentChar;
         }
 
+        /**
+         * 拆分的特性（顺序，大小已知，非空，不可修改）
+         *
+         * @return
+         */
         @Override
         public int characteristics() {
             return ORDERED + SIZED + SUBSIZED + NONNULL + IMMUTABLE;

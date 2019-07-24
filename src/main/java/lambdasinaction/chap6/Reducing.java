@@ -1,11 +1,14 @@
 package lambdasinaction.chap6;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.reducing;
 import static lambdasinaction.chap6.Dish.menu;
 
+/**
+ * 4种方式是等价的
+ */
 public class Reducing {
 
-    public static void main(String ... args) {
+    public static void main(String... args) {
         System.out.println("Total calories in menu: " + calculateTotalCalories());
         System.out.println("Total calories in menu: " + calculateTotalCaloriesWithMethodReference());
         System.out.println("Total calories in menu: " + calculateTotalCaloriesWithoutCollectors());

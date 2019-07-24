@@ -1,6 +1,7 @@
 package lambdasinaction.chap7;
 
-import java.util.stream.*;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 public class ParallelStreams {
 
@@ -12,13 +13,26 @@ public class ParallelStreams {
         return result;
     }
 
+    /**
+     * 顺序流
+     *
+     * @param n
+     * @return
+     */
     public static long sequentialSum(long n) {
         return Stream.iterate(1L, i -> i + 1).limit(n).reduce(Long::sum).get();
     }
 
+    /**
+     * 并行流
+     *
+     * @param n
+     * @return
+     */
     public static long parallelSum(long n) {
         return Stream.iterate(1L, i -> i + 1).limit(n).parallel().reduce(Long::sum).get();
     }
+    
 
     public static long rangedSum(long n) {
         return LongStream.rangeClosed(1, n).reduce(Long::sum).getAsLong();
@@ -28,6 +42,12 @@ public class ParallelStreams {
         return LongStream.rangeClosed(1, n).parallel().reduce(Long::sum).getAsLong();
     }
 
+    /**
+     * accumulator的total被多个线程共享，产生竞争，错误
+     *
+     * @param n
+     * @return
+     */
     public static long sideEffectSum(long n) {
         Accumulator accumulator = new Accumulator();
         LongStream.rangeClosed(1, n).forEach(accumulator::add);
